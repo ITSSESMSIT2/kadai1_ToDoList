@@ -15,7 +15,6 @@ form.addEventListener("submit", function (e) {
   e.preventDefault();
   //submitが押された時点での情報を取得したいのでここ
   taskId++;
-  console.log(`IDは${taskId}`);
   const trashImg = document.createElement("img");
   trashImg.src = "Vector.png";
   //配列の中に画像も入れて、クリックした画像からidを拾えるようにしたい
@@ -28,7 +27,6 @@ form.addEventListener("submit", function (e) {
   };
   addList(task.name, task.limit, task.status, task.id, task.img);
   //入力欄を初期化
-  list.push(task);
   taskName.value = "";
   taskLimit.value = "";
   taskStatus.value = "0";
@@ -36,9 +34,8 @@ form.addEventListener("submit", function (e) {
 
 //一覧に行を加えるための関数を作成
 const addList = function (addName, addLimit, addStatus, addId, addImg) {
-  const li = document.createElement("li");
-  li.classList.add("taskLi");
   //進行状態を表すセレクトボタンを追加
+  const li = document.createElement("li");
   const statusSelect = document.createElement("select");
   const optionBefore = document.createElement("option");
   const optionNow = document.createElement("option");
@@ -57,6 +54,7 @@ const addList = function (addName, addLimit, addStatus, addId, addImg) {
   statusSelect.add(optionBefore);
   statusSelect.add(optionNow);
   statusSelect.add(optionFinish);
+  statusSelect.className = "changeStatus";
 
   //nameが空文字もしくはnullのとき
   if (taskName.value === "" || taskName.value === null) {
@@ -68,43 +66,49 @@ const addList = function (addName, addLimit, addStatus, addId, addImg) {
     //Selectの中でも値を保持して表示するように設定
     statusSelect.value = addStatus;
     li.appendChild(statusSelect);
+    statusSelect.className = "changeStatus";
+    li.id = addId;
     li.appendChild(addImg);
     ul.appendChild(li);
-    console.log(list);
+    // 配列の中にliをそのまま格納することで、以降の動作でTFでの返答をしやすくする。
+    list.push(li);
+    //console.log(list);
   }
 };
 
 // 画像がクリックされたときに、同じ欄の中にあるToDoを削除
-// imgをliの中の要素にしているので、可能であればこのイベントが発火する位置はliにしたいが、
-// liの追加を指定しているのがaddList関数の中であるため指定できない。
-// liにタグをつけてquerySelectorAllで呼び出し、新しい関数に格納する？
-// addEventListernerは単一の要素に対してしか使えないため、querySelectorAllでは矛盾する。
-
-const taskLi = document.querySelector(".taskLi");
-console.log(taskLi);
-taskLi.addEventListener("click", function (ev) {
+ul.addEventListener("click", function (ev) {
   // 画像をクリックしたら親要素が削除されるように設定
   if (ev.target.nodeName === "IMG") {
-    console.log(ev.target.id);
-    const equalNum = (element) => element === ev.target.id;
-    console.log(list.findIndex(equalNum));
-    const targetIndex = list.findIndex(equalNum);
+    // IMGの親要素であるliと、配列の中のliが一致するかTFを返すメソッドを用意
+    const parent = (element) => element == ev.target.parentElement;
+    // 初めにtrueを返す要素のインデックスを渡すfindIndexを利用
+    const targetIndex = list.findIndex(parent);
+    // 確認用　console.log(targetIndex);
+    // 配列から、一致するインデックスの要素一項目のみを削除
     list.splice(targetIndex, 1);
+    //画面上からも削除。IMGからもっとも近いli要素を指定する。
     ev.target.closest("li").remove();
-    console.log(list);
+    //確認用　console.log(list);
   }
 });
-/* <ul>
-    <li></li>
-</ul>
-
-<div>
-    <span>タスク名</span><span>期日</span><span>ステータス</span>
-</div> */
 
 //一覧の中で状態が変更されたら配列内の情報も更新するように設定
-container.addEventListener("change", function (eve) {
+ul.addEventListener("change", function (eve) {
   if (eve.target.nodeName === "SELECT") {
-    console.log(eve.target);
+    // 今、選択しているのはselect要素自体であり、その中の数字(value)を変えたい。
+    // ただ、listにはliをそのまま格納している。
+    // セレクトボタンを触ったliを配列から呼び出しておく
+    const parent = (element) => element == eve.target.parentElement; //<li>
+    const targetIndex = list.findIndex(parent);
+    //確認用　console.log(targetIndex);
+    //querySelectorの指定範囲がdocumentでは不正確。イベントの中で対象となるかを確認したいため、渡すのはeve.target.parentElement
+    const changeStatusValue =
+      eve.target.parentElement.querySelector(".changeStatus").value;
+    // 書き換える→innerHTMLという手段もある
+    list[targetIndex].taskStatus = changeStatusValue;
+    // 以下、配列にliを入れていること、またliの中にselectを直で入れているために配列の中身まで変更されているか確認するためのconsole.log
+    // console.log(list[0].taskStatus);
+    // console.log(list[1].taskStatus);
   }
 });
