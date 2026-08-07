@@ -3,8 +3,34 @@ header {
   font-family: Roboto;
   color: #ffffff;
   font-style: bold;
-  font-width: 140px;
   background-color: #1976d2;
-  width: 1040px;
   height: 64px;
+  padding-top: 20px;
+  padding-left: 32px;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+#firstPanel {
+  width: 976px;
+  height: 150px;
+  background-color: #ffffff;
+  border: 1px, solid, #e0e0e0;
+  border-radius: 1em;
+  padding-left: 24px;
+}
+
+#secondPanel {
+  width: 976px;
+  height: 357px;
+  background-color: #ffffff;
+  border: 1px, solid, #e0e0e0;
+  border-radius: 1em;
+  padding-left: 24px;
+}
+
+li {
+  list-style: none;
 }
