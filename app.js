@@ -98,27 +98,27 @@ const addList = function (task) {
 };
 
 // 画像がクリックされたときに、同じ欄の中にあるToDoを削除
-ul.addEventListener("click", function (ev) {
-  // ボタン（画像）を押すと親要素が削除されるように設定
-  // nodeNameと完全一致にすると、画像が判定から外れてしまうのでclosestメソッドを利用。
-  // クリックした（=イベントが発火した）ものに一番近接の要素がボタンならばというif文
-  // if (ev.target.closest("BUTTON")) {
-  //   const parent = ev.target.parentElement;
-  //   console.log(parent);
-  //   // IMGの親要素であるliと、配列の中のliが一致するかTFを返すメソッドを用意
-  //   const parentId = Number(parent.querySelector("#idSpan").innerText);
-  //   const equalIdValue = (element) => element.id === parentId;
-  //   // 初めにtrueを返す要素のインデックスを渡すfindIndexを利用
-  //   const deliteTargetIndex = Number(taskList.findIndex(equalIdValue));
-  //   if (deliteTargetIndex !== -1 && deliteTargetIndex !== null) {
-  //     // 配列から、一致するインデックスの要素一項目のみを削除
-  //     taskList.splice(deliteTargetIndex, 1);
-  //     //画面上からも削除。IMGからもっとも近いli要素を指定する。
-  //     ev.target.closest("li").remove();
-  //   }
-    // 確認用　console.log(taskList);
-  }
-});
+// ul.addEventListener("click", function (ev) {
+// ボタン（画像）を押すと親要素が削除されるように設定
+// nodeNameと完全一致にすると、画像が判定から外れてしまうのでclosestメソッドを利用。
+// クリックした（=イベントが発火した）ものに一番近接の要素がボタンならばというif文
+// if (ev.target.closest("BUTTON")) {
+//   const parent = ev.target.parentElement;
+//   console.log(parent);
+//   // IMGの親要素であるliと、配列の中のliが一致するかTFを返すメソッドを用意
+//   const parentId = Number(parent.querySelector("#idSpan").innerText);
+//   const equalIdValue = (element) => element.id === parentId;
+//   // 初めにtrueを返す要素のインデックスを渡すfindIndexを利用
+//   const deliteTargetIndex = Number(taskList.findIndex(equalIdValue));
+//   if (deliteTargetIndex !== -1 && deliteTargetIndex !== null) {
+//     // 配列から、一致するインデックスの要素一項目のみを削除
+//     taskList.splice(deliteTargetIndex, 1);
+//     //画面上からも削除。IMGからもっとも近いli要素を指定する。
+//     ev.target.closest("li").remove();
+//   }
+// 確認用　console.log(taskList);
+//   }
+// });
 
 //一覧の中で状態が変更されたら配列内の情報も更新するように設定
 ul.addEventListener("change", function (eve) {
