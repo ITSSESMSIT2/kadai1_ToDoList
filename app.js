@@ -3,9 +3,9 @@ const ul = document.querySelector("#taskContainer");
 const taskList = [];
 
 const day = new Date();
-const dayString = day.toISOString();
-console.log(dayString);
-const sliceDay = dayString.slice(0, 10);
+const japanDay = day.toISOString().replace("Z", "+09:00");
+// 確認用　console.log(japanDay);
+const sliceDay = japanDay.slice(0, 10);
 const defaultDay = document.querySelector("#taskLimit");
 defaultDay.value = `${sliceDay}`;
 
@@ -29,7 +29,7 @@ form.addEventListener("submit", function (e) {
     id: taskId,
   };
   taskList.push(task);
-  console.log(taskList);
+  // 確認用　console.log(taskList);
   addList(task);
   // 入力欄を初期化
   taskName.value = "";
@@ -63,10 +63,11 @@ const addList = function (task) {
 
   // button要素を作成し、そこに子要素として画像をつける
   const deleteButton = document.createElement("button");
+  deleteButton.ariaLabel = "削除";
   const deleteImg = document.createElement("img");
   deleteImg.src = "Vector.png";
-  deleteImg.alt = "削除ボタン";
-  deleteButton.appendChild(deleteImg);
+  deleteImg.style.pointerEvents = "none";
+  deleteButton.append(deleteImg);
 
   // nameが空文字もしくはnullのとき
   if (task.name === "" || task.name === null) {
@@ -80,7 +81,8 @@ const addList = function (task) {
     li.append(nameSpan);
     const limitSpan = document.createElement("span");
     limitSpan.id = "limitSpan";
-    limitSpan.innerText = `${task.limit}`;
+    const taskLimitView = task.limit.replaceAll("-", "/");
+    limitSpan.innerText = taskLimitView;
     li.append(limitSpan);
     // セレクトボタンの中にもオブジェクトの内容を反映
     statusSelect.value = task.status;
@@ -98,27 +100,26 @@ const addList = function (task) {
 };
 
 // 画像がクリックされたときに、同じ欄の中にあるToDoを削除
-// ul.addEventListener("click", function (ev) {
-// ボタン（画像）を押すと親要素が削除されるように設定
-// nodeNameと完全一致にすると、画像が判定から外れてしまうのでclosestメソッドを利用。
-// クリックした（=イベントが発火した）ものに一番近接の要素がボタンならばというif文
-// if (ev.target.closest("BUTTON")) {
-//   const parent = ev.target.parentElement;
-//   console.log(parent);
-//   // IMGの親要素であるliと、配列の中のliが一致するかTFを返すメソッドを用意
-//   const parentId = Number(parent.querySelector("#idSpan").innerText);
-//   const equalIdValue = (element) => element.id === parentId;
-//   // 初めにtrueを返す要素のインデックスを渡すfindIndexを利用
-//   const deliteTargetIndex = Number(taskList.findIndex(equalIdValue));
-//   if (deliteTargetIndex !== -1 && deliteTargetIndex !== null) {
-//     // 配列から、一致するインデックスの要素一項目のみを削除
-//     taskList.splice(deliteTargetIndex, 1);
-//     //画面上からも削除。IMGからもっとも近いli要素を指定する。
-//     ev.target.closest("li").remove();
-//   }
-// 確認用　console.log(taskList);
-//   }
-// });
+ul.addEventListener("click", function (ev) {
+  // ボタン（画像はマウスイベントを無視）を押すと、親要素が削除されるように設定
+  if (ev.target.nodeName === "BUTTON") {
+    const parent = ev.target.parentElement;
+    // spanにつけておいたid属性から、liの中のidを拾う
+    const parentId = parent.querySelector("#idSpan");
+    const parentIdNumber = Number(parentId.innerText);
+    // 配列内の要素に、クリックされたliのidと一致するものがあるかを確認する関数を用意
+    const checkId = (element) => element.id === parentIdNumber;
+    // 初めにtrueを返す要素のインデックスを渡す、findIndexを利用
+    const deliteTargetIndex = Number(taskList.findIndex(checkId));
+    if (deliteTargetIndex !== -1 && deliteTargetIndex !== null) {
+      // 配列から、一致するインデックスの要素一項目のみを削除
+      taskList.splice(deliteTargetIndex, 1);
+      //画面上からも削除。buttonからもっとも近いli要素を指定する。
+      ev.target.closest("li").remove();
+    }
+    //確認用 console.log(taskList);
+  }
+});
 
 //一覧の中で状態が変更されたら配列内の情報も更新するように設定
 ul.addEventListener("change", function (eve) {
@@ -130,16 +131,16 @@ ul.addEventListener("change", function (eve) {
     const parentId = parent.querySelector("#idSpan");
     // 数字として受け取りたいので、idSpanの中に格納されている文字列としての数字にNumber()を利用
     // innerTextは必ずしも文字の更新だけに使うわけではない
-    const parentIdValue = Number(parentId.innerText);
+    const parentIdNumber = Number(parentId.innerText);
     // 確認用　console.log(parentIdValue);
-    // 配列内のid要素と、idSpanの中の数字が一致する要素を探すboolean式を用意
-    const equalIdValue = (element) => element.id === parentIdValue;
+    // 配列内のid要素と、idSpanの中の数字が一致する要素を探す関数を用意
+    const checkId = (element) => element.id === parentIdNumber;
     // findIndex(配列内の要素で、初めに一致するものを返す)を利用し検索、インデックスを数字で返してもらう
-    const targetIndex = Number(taskList.findIndex(equalIdValue));
-    if (targetIndex !== -1 && targetIndex !== null) {
+    const changeTargetIndex = Number(taskList.findIndex(checkId));
+    if (changeTargetIndex !== -1 && changeTargetIndex !== null) {
       // .changeStatusはliのselect要素につけたclass名
       const changeStatusValue = parent.querySelector(".changeStatus").value;
-      taskList[targetIndex].status = changeStatusValue;
+      taskList[changeTargetIndex].status = changeStatusValue;
     }
   }
 });
