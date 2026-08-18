@@ -1,38 +1,38 @@
 header {
   background-color: #1976d2;
-  height: 64px;
   font-size: 20px;
   font-weight: bold;
   font-family: Roboto;
   color: #ffffff;
   padding-top: 20px;
   padding-left: 32px;
+  padding-bottom: 20px;
   border: none;
 }
 
 main {
   background-color: #f5f5f5;
-  padding-top: 88px;
 }
 
-#firstPanel {
+#firstPanel,
+#secondPanel {
   height: 150px;
   background-color: #ffffff;
-  border: 1px, solid, #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 1em;
-
   padding-left: 24px;
-  border-top: 56px;
-  border-left: 32px;
+  margin-top: 16px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
-
+/* 
 #secondPanel {
   background-color: #ffffff;
   border: 1px, solid, #e0e0e0;
   border-radius: 1em;
-  border-top: 262px;
+ border-top: 262px;
   padding-left: 24px;
-}
+}  */
 
 li {
   list-style: none;
