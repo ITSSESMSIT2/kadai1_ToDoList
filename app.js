@@ -4,7 +4,6 @@ const taskList = [];
 
 const day = new Date();
 const year = day.getFullYear();
-console.log(year);
 const monthNum = String(day.getMonth() + 1);
 const month = monthNum.padStart(2, "0");
 const dateNum = String(day.getDate());
@@ -84,11 +83,11 @@ const addList = function (task) {
 
   // CSSで整理したいため、span要素をそれぞれに作成し、その中にオブジェクトの内容を格納
   const nameSpan = document.createElement("span");
-  nameSpan.id = "nameSpan";
+  nameSpan.className = "nameSpan";
   nameSpan.innerText = `${task.name}`;
   li.append(nameSpan);
   const limitSpan = document.createElement("span");
-  limitSpan.id = "limitSpan";
+  limitSpan.className = "limitSpan";
   const taskLimitView = task.limit.replaceAll("-", "/");
   limitSpan.innerText = taskLimitView;
   li.append(limitSpan);
